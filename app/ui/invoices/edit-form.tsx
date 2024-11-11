@@ -9,6 +9,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
+import { State, updateInvoice } from '@/app/lib/actions';
+import { useActionState } from 'react';
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,10 +19,16 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const initialState: State = {errors: {}, message: null}
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const [state, action] = useActionState(updateInvoiceWithId, initialState);
+
+  const customer = customers.find((c) => c.id === invoice.customer_id);
+
   return (
-    <form>
+    <form action={action}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Customer Name */}
+        {customer?.name}
         <div className="mb-4">
           <label htmlFor="customer" className="mb-2 block text-sm font-medium">
             Choose customer
